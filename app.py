@@ -1,4 +1,4 @@
-import json, sqlite3, click, functools, os, hashlib,time, random, sys
+import json, sqlite3, click, functools, os, hashlib,time, random, sys, hashlib
 from flask import Flask, current_app, g, session, redirect, render_template, url_for, request
 
 
@@ -110,7 +110,7 @@ def login():
     error = ""
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = hashlib.sha256(request.form['password'])
         db = connect_db()
         c = db.cursor()
         statement = "SELECT * FROM users WHERE username = '%s' AND password = '%s';" %(username, password)
@@ -137,7 +137,7 @@ def register():
         
 
         username = request.form['username']
-        password = request.form['password']
+        password = hashlib.sha256(request.form['password'])
         db = connect_db()
         c = db.cursor()
         pass_statement = """SELECT * FROM users WHERE password = '%s';""" %password
