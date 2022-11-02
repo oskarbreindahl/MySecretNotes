@@ -110,7 +110,9 @@ def login():
     error = ""
     if request.method == 'POST':
         username = request.form['username']
-        password = hashlib.sha256(request.form['password'])
+        password = request.form['password']
+        passwordString = "{password}".encode()
+        password = hashlib.sha256(passwordString)
         db = connect_db()
         c = db.cursor()
         statement = "SELECT * FROM users WHERE username = '%s' AND password = '%s';" %(username, password)
@@ -137,7 +139,9 @@ def register():
         
 
         username = request.form['username']
-        password = hashlib.sha256(request.form['password'])
+        password = request.form['password']
+        passwordString = "{password}".encode()
+        password = hashlib.sha256(passwordString)
         db = connect_db()
         c = db.cursor()
         pass_statement = """SELECT * FROM users WHERE password = '%s';""" %password
