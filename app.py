@@ -110,6 +110,13 @@ def myHash(text:str):
     hash = ( hash*281  ^ ord(ch)*997) & 0xFFFFFFFF
   return hash
 
+def sanitize(text:str):
+    sanitary = False
+    sanitary = text.__contains__("'")
+    sanitary = text.__contains__(" ")
+    sanitary = text.__contains__("-")
+    return sanitary
+
 
 @app.route("/login/", methods=('GET', 'POST'))
 def login():
@@ -123,14 +130,14 @@ def login():
         c.execute(statement)
         result = c.fetchall()
 
-        if len(result) > 0:
+        if len(result) > 0 and sanitize(username) and sanitize(password):            
             session.clear()
             session['logged_in'] = True
             session['userid'] = result[0][0]
             session['username']=result[0][1]
             return redirect(url_for('index'))
         else:
-            error = "Wrong username or password!"
+            error = "Wrong username or password, or invalid input!"
     return render_template('login.html',error=error)
 
 
@@ -155,6 +162,9 @@ def register():
         if(len(c.fetchall())>0):
             errored = True
             usererror = "That username is already in use by someone else!"
+        
+        errored = not sanitize(username)
+        errored = not sanitize(password)
 
         if(not errored):
             statement = """INSERT INTO users(id,username,password) VALUES(null,'%s','%s');""" %(username,password)
