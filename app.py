@@ -166,6 +166,9 @@ def register():
         errored = not sanitize(username)
         errored = not sanitize(password)
 
+        if errored:
+            usererror = "Invalid username or password!"
+
         if(not errored):
             statement = """INSERT INTO users(id,username,password) VALUES(null,'%s','%s');""" %(username,password)
             print(statement)
