@@ -104,14 +104,19 @@ def notes():
     
     return render_template('notes.html',notes=notes,importerror=importerror)
 
+def myHash(text:str):
+  hash=0
+  for ch in text:
+    hash = ( hash*281  ^ ord(ch)*997) & 0xFFFFFFFF
+  return hash
+
 
 @app.route("/login/", methods=('GET', 'POST'))
 def login():
     error = ""
     if request.method == 'POST':
         username = request.form['username']
-        password = "" + request.form['password']
-        password = str(hashlib.md5(password.encode()))
+        password = str(myHash(request.form['password']))
         db = connect_db()
         c = db.cursor()
         statement = "SELECT * FROM users WHERE username = '%s' AND password = '%s';" %(username, password)
@@ -136,8 +141,7 @@ def register():
     passworderror = ""
     if request.method == 'POST':
         username = request.form['username']
-        password = "" + request.form['password']
-        password = str(hashlib.md5(password.encode()))
+        password = str(myHash(request.form['password']))
         db = connect_db()
         c = db.cursor()
         pass_statement = """SELECT * FROM users WHERE password = '%s';""" %password
