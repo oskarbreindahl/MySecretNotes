@@ -112,9 +112,9 @@ def myHash(text:str):
 
 def sanitize(text:str):
     sanitary = False
-    sanitary = text.__contains__("'")
-    sanitary = text.__contains__(" ")
-    sanitary = text.__contains__("-")
+    sanitary = not text.__contains__("'")
+    sanitary = not text.__contains__(" ")
+    sanitary = not text.__contains__("-")
     return sanitary
 
 
