@@ -64,7 +64,6 @@ def index():
 
 
 @app.route("/notes/", methods=('GET', 'POST'))
-@login_required
 def notes():
     importerror=""
     #Posting a new note:
@@ -167,7 +166,7 @@ def register():
         errored = not sanitize(password)
 
         if errored:
-            usererror = "Invalid username or password!"
+            usererror = "Invalid username or password! Please only use letters or numbers."
 
         if(not errored):
             statement = """INSERT INTO users(id,username,password) VALUES(null,'%s','%s');""" %(username,password)
